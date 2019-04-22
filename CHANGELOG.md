@@ -2,6 +2,8 @@
 # Changelog
 
 [Unreleased]
+
+[v0.0.1] 22-04-2019
  - cli has been built with 3 flags
  - ticker has been added to run at intervals
  - checking for time against specified time frames added
