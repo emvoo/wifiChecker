@@ -2,9 +2,10 @@ package main
 
 import (
 	"log"
-	"os"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
+	"github.com/gobuffalo/packr/v2"
 	"github.com/urfave/cli"
 )
 
@@ -21,20 +22,32 @@ const (
 	isConnectedScript = "is_connected.sh"
 )
 
+var box *packr.Box
+
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	app := cli.NewApp()
-	app.Description = description
-	app.Version = version
-	app.Flags = flags
+	spew.Dump(isConnected())
+	// box = packr.New("scripts-box", scriptsPath)
+	// scriptRunner("is_connected.sh")
+	// resp, err := scriptRunner("test.sh")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	//
+	// spew.Dump(resp)
 
-	app.Action = cli.ActionFunc(run)
-	if err := app.Run(os.Args); err != nil {
-		log.Fatal(err)
-	}
-
-	select {}
+	// app := cli.NewApp()
+	// app.Description = description
+	// app.Version = version
+	// app.Flags = flags
+	//
+	// app.Action = cli.ActionFunc(run)
+	// if err := app.Run(os.Args); err != nil {
+	// 	log.Fatal(err)
+	// }
+	//
+	// select {}
 }
 
 func run(cliCtx *cli.Context) error {

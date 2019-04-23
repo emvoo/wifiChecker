@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 	"time"
 )
@@ -14,12 +13,20 @@ func getPwd() string {
 	return str
 }
 
-func scriptRunner(script string) ([]byte, error) {
-	pathToScript := filepath.Join(getPwd(), scriptsPath, script)
-	return exec.Command(pathToScript).Output()
-}
-
 func isEnabled() bool {
+	cmd := exec.Command("nmcli", "radio", "wifi")
+	// todo check on linux if this still applies if not check for cmd.Output()
+	if err := cmd.Start(); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := cmd.Wait(); err != nil {
+		return false
+	}
+
+	return true
+	// END_TODO
+
 	enabledOutput, err := scriptRunner(isEnabledScript)
 	if err != nil {
 		log.Fatal(err)
@@ -50,14 +57,14 @@ func isAllowed(t, from, to time.Time) bool {
 }
 
 func isConnected() bool {
-	out, err := scriptRunner(isConnectedScript)
-	if err != nil {
+	cmd := exec.Command("wget", "--spider", "http://google.com")
+	if err := cmd.Start(); err != nil {
 		log.Fatal(err)
 	}
 
-	if string(out) == online {
-		return true
+	if err := cmd.Wait(); err != nil {
+		return false
 	}
 
-	return false
+	return true
 }

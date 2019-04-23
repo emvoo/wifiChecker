@@ -1,3 +1,3 @@
 #!/bin/sh
 
-nmcli radio  wifi
+nmcli radio wifi
