@@ -2,52 +2,37 @@ package main
 
 import (
 	"log"
+	"os"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
-	"github.com/gobuffalo/packr/v2"
 	"github.com/urfave/cli"
 )
 
 const (
-	online            = "online"
-	version           = "0.0.1"
-	timeFormat        = "15:04"
-	description       = "Application to run the scripts on 60 seconds (default, can be overridden) intervals."
-	scriptsPath       = "scripts"
-	enableScript      = "enable_wifi.sh"
-	disableScript     = "disable_wifi.sh"
-	worldClockAPI     = "http://worldtimeapi.org/api/ip"
-	isEnabledScript   = "is_wifi_enabled.sh"
-	isConnectedScript = "is_connected.sh"
+	version        = "0.0.1"
+	timeFormat     = "15:04"
+	description    = "Application to run the scripts on 60 seconds (default, can be overridden) intervals."
+	isEnabledCmd   = "nmcli radio wifi"
+	worldClockAPI  = "http://worldtimeapi.org/api/ip"
+	enableWiFiCmd  = "nmcli radio wifi on"
+	disableWiFiCmd = "nmcli radio wifi off"
+	isConnectedCmd = "wget --spider http://google.com"
 )
-
-var box *packr.Box
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	spew.Dump(isConnected())
-	// box = packr.New("scripts-box", scriptsPath)
-	// scriptRunner("is_connected.sh")
-	// resp, err := scriptRunner("test.sh")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	//
-	// spew.Dump(resp)
+	app := cli.NewApp()
+	app.Description = description
+	app.Version = version
+	app.Flags = flags
 
-	// app := cli.NewApp()
-	// app.Description = description
-	// app.Version = version
-	// app.Flags = flags
-	//
-	// app.Action = cli.ActionFunc(run)
-	// if err := app.Run(os.Args); err != nil {
-	// 	log.Fatal(err)
-	// }
-	//
-	// select {}
+	app.Action = cli.ActionFunc(run)
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
+
+	select {}
 }
 
 func run(cliCtx *cli.Context) error {

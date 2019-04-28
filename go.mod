@@ -9,6 +9,7 @@ require (
 	github.com/gobuffalo/gogen v0.1.1 // indirect
 	github.com/gobuffalo/packr/v2 v2.2.0
 	github.com/kr/pty v1.1.4 // indirect
+	github.com/pkg/errors v0.8.1
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/urfave/cli v1.20.0
 	golang.org/x/crypto v0.0.0-20190422183909-d864b10871cd // indirect
