@@ -29,10 +29,22 @@ func disableWiFi() {
 }
 
 func isAllowed(t, from, to time.Time) bool {
+	if isWeekend(t) && t.Before(to) {
+		return true
+	}
+
 	if t.After(from) && t.Before(to) {
 		return true
 	}
 
+	return false
+}
+
+func isWeekend(t time.Time) bool {
+	// Saturday or Sunday
+	if t.Weekday() == 6 || t.Weekday() == 0 {
+		return true
+	}
 	return false
 }
 

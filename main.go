@@ -36,13 +36,9 @@ func main() {
 }
 
 func run(cliCtx *cli.Context) error {
-	from, err := toTime(cliCtx.String("from"))
+	from, to, err := getFromTo(cliCtx)
 	if err != nil {
-		log.Fatal(err)
-	}
-	to, err := toTime(cliCtx.String("to"))
-	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	// initialize ticker interval
@@ -75,5 +71,18 @@ func run(cliCtx *cli.Context) error {
 			}
 		}
 	}
-	return nil
+}
+
+func getFromTo(cliCtx *cli.Context) (from time.Time, to time.Time, err error) {
+	from, err = toTime(cliCtx.String("from"))
+	if err != nil {
+		return
+	}
+
+	to, err = toTime(cliCtx.String("to"))
+	if err != nil {
+		return
+	}
+
+	return
 }
