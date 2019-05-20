@@ -28,8 +28,8 @@ func disableWiFi() {
 	commandRunner(disableWiFiCmd)
 }
 
-func isAllowed(t, from, to time.Time) bool {
-	if isWeekend(t) && t.Before(to) {
+func isAllowed(t, from, to time.Time, weekend bool) bool {
+	if weekend && isWeekend(t) && t.Before(to) {
 		return true
 	}
 

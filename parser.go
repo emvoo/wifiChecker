@@ -8,7 +8,8 @@ import (
 	"time"
 )
 
-type TimeResponse struct {
+// timeResponse as its expected from worldAPI
+type timeResponse struct {
 	WeekNumber   int       `json:"week_number"`
 	UtcOffset    string    `json:"utc_offset"`
 	UtcDatetime  time.Time `json:"utc_datetime"`
@@ -37,7 +38,7 @@ func getCurrentTime() time.Time {
 		log.Fatal(err)
 	}
 
-	tr := TimeResponse{}
+	tr := timeResponse{}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatal(err)

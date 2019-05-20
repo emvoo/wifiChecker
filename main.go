@@ -41,6 +41,7 @@ func run(cliCtx *cli.Context) error {
 		return err
 	}
 
+	weekend := cliCtx.Bool("weekend")
 	// initialize ticker interval
 	interval := toInterval(cliCtx.Int64("interval"))
 	// initialize ticker
@@ -55,7 +56,7 @@ func run(cliCtx *cli.Context) error {
 		case <-ticker.C:
 			t := getCurrentTime()
 			// check if allowed to watch
-			if isAllowed(t, from, to) {
+			if isAllowed(t, from, to, weekend) {
 				// check if wifi enabled
 				if !isEnabled() {
 					log.Println("wifi is disabled, enabling...")

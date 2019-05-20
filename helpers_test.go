@@ -19,13 +19,57 @@ func Test_isAllowed(t *testing.T) {
 		{
 			name: "test monday 6am",
 			args: args{
-				t:    time.Date(2019, 4, 1, 1, 1, 1, 1, time.UTC),
-				from: time.Date(2019, 4, 1, 1, 1, 1, 1, time.UTC),
-				to:   time.Date(2019, 4, 1, 1, 1, 1, 1, time.UTC),
+				t:    time.Date(2019, 4, 1, 6, 0, 0, 0, time.UTC),
+				from: time.Date(2019, 4, 1, 8, 0, 0, 0, time.UTC),
+				to:   time.Date(2019, 4, 1, 19, 0, 0, 0, time.UTC),
 			},
 			want: false,
 		},
-
+		{
+			name: "test monday 9am",
+			args: args{
+				t:    time.Date(2019, 4, 1, 9, 0, 0, 0, time.UTC),
+				from: time.Date(2019, 4, 1, 8, 0, 0, 0, time.UTC),
+				to:   time.Date(2019, 4, 1, 19, 0, 0, 0, time.UTC),
+			},
+			want: true,
+		},
+		{
+			name: "test friday 23:59pm",
+			args: args{
+				t:    time.Date(2019, 4, 5, 23, 59, 0, 0, time.UTC),
+				from: time.Date(2019, 4, 5, 8, 0, 0, 0, time.UTC),
+				to:   time.Date(2019, 4, 5, 19, 0, 0, 0, time.UTC),
+			},
+			want: false,
+		},
+		{
+			name: "test saturday 00:01am",
+			args: args{
+				t:    time.Date(2019, 4, 6, 0, 1, 0, 0, time.UTC),
+				from: time.Date(2019, 4, 6, 8, 0, 0, 0, time.UTC),
+				to:   time.Date(2019, 4, 6, 19, 0, 0, 0, time.UTC),
+			},
+			want: true, // weekend already
+		},
+		{
+			name: "test weekend 6am",
+			args: args{
+				t:    time.Date(2019, 4, 6, 6, 0, 0, 0, time.UTC),
+				from: time.Date(2019, 4, 6, 8, 0, 0, 0, time.UTC),
+				to:   time.Date(2019, 4, 6, 19, 0, 0, 0, time.UTC),
+			},
+			want: true,
+		},
+		{
+			name: "test weekend 8pm",
+			args: args{
+				t:    time.Date(2019, 4, 6, 20, 0, 0, 0, time.UTC),
+				from: time.Date(2019, 4, 6, 8, 0, 0, 0, time.UTC),
+				to:   time.Date(2019, 4, 6, 19, 0, 0, 0, time.UTC),
+			},
+			want: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -103,64 +147,3 @@ func Test_isWeekend(t *testing.T) {
 		})
 	}
 }
-
-// func Test_isConnected(t *testing.T) {
-// 	tests := []struct {
-// 		name string
-// 		want bool
-// 	}{
-// 		{},
-// 	}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			if got := isConnected(); got != tt.want {
-// 				t.Errorf("isConnected() = %v, want %v", got, tt.want)
-// 			}
-// 		})
-// 	}
-// }
-
-// func Test_commandRunner(t *testing.T) {
-// 	type args struct {
-// 		command string
-// 	}
-// 	tests := []struct {
-// 		name string
-// 		args args
-// 		want bool
-// 	}{
-// 		// TODO: Add test cases.
-// 	}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			if got := commandRunner(tt.args.command); got != tt.want {
-// 				t.Errorf("commandRunner() = %v, want %v", got, tt.want)
-// 			}
-// 		})
-// 	}
-// }
-//
-// func Test_toCommand(t *testing.T) {
-// 	type args struct {
-// 		input string
-// 	}
-// 	tests := []struct {
-// 		name  string
-// 		args  args
-// 		want  string
-// 		want1 []string
-// 	}{
-// 		// TODO: Add test cases.
-// 	}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			got, got1 := toCommand(tt.args.input)
-// 			if got != tt.want {
-// 				t.Errorf("toCommand() got = %v, want %v", got, tt.want)
-// 			}
-// 			if !reflect.DeepEqual(got1, tt.want1) {
-// 				t.Errorf("toCommand() got1 = %v, want %v", got1, tt.want1)
-// 			}
-// 		})
-// 	}
-// }
