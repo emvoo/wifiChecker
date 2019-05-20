@@ -1,7 +1,9 @@
 
 # Changelog
 
-[Unreleased]
+[Unreleased] 20-05-2019  
+Fixes parsing time response from work clock api  
+Some tests added
 
 [v0.0.1] 22-04-2019
  - cli has been built with 3 flags
