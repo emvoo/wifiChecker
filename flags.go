@@ -22,6 +22,11 @@ var flags = []cli.Flag{
 		Usage: "what time should the wifi be disabled",
 		Value: "19:00",
 	},
+	cli.BoolTFlag{
+		Name:        "weekend,w",
+		Usage:       "to tell if weekend is freely available in the morning",
+		Hidden:      true,
+	},
 }
 
 func toInterval(input int64) time.Duration {

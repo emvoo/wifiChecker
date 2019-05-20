@@ -1,47 +1,38 @@
 package main
 
 import (
+	"fmt"
 	"log"
-	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 	"time"
 )
 
-func getPwd() string {
-	str, _ := os.Getwd()
-	return str
-}
-
-func scriptRunner(script string) ([]byte, error) {
-	pathToScript := filepath.Join(getPwd(), scriptsPath, script)
-	return exec.Command(pathToScript).Output()
-}
-
 func isEnabled() bool {
-	enabledOutput, err := scriptRunner(isEnabledScript)
+	comm, args := toCommand(isEnabledCmd)
+	b, err := exec.Command(comm, args...).Output()
 	if err != nil {
 		log.Fatal(err)
 	}
-	str := string(enabledOutput)
+
+	str := string(b)
 	str = strings.TrimSuffix(str, "\n")
 	return str == "enabled"
 }
 
 func enableWiFi() {
-	if _, err := scriptRunner(enableScript); err != nil {
-		log.Fatal(err)
-	}
+	commandRunner(enableWiFiCmd)
 }
 
 func disableWiFi() {
-	if _, err := scriptRunner(disableScript); err != nil {
-		log.Fatal(err)
-	}
+	commandRunner(disableWiFiCmd)
 }
 
-func isAllowed(t, from, to time.Time) bool {
+func isAllowed(t, from, to time.Time, weekend bool) bool {
+	if weekend && isWeekend(t) && t.Before(to) {
+		return true
+	}
+
 	if t.After(from) && t.Before(to) {
 		return true
 	}
@@ -49,15 +40,41 @@ func isAllowed(t, from, to time.Time) bool {
 	return false
 }
 
+func isWeekend(t time.Time) bool {
+	// Saturday or Sunday
+	if t.Weekday() == 6 || t.Weekday() == 0 {
+		return true
+	}
+	return false
+}
+
 func isConnected() bool {
-	out, err := scriptRunner(isConnectedScript)
-	if err != nil {
+	return commandRunner(isConnectedCmd)
+}
+
+func commandRunner(command string) bool {
+	comm, args := toCommand(command)
+
+	cmd := exec.Command(comm, args...)
+	if err := cmd.Start(); err != nil {
 		log.Fatal(err)
 	}
 
-	if string(out) == online {
-		return true
+	if err := cmd.Wait(); err != nil {
+		return false
 	}
 
-	return false
+	return true
+}
+
+func toCommand(input string) (string, []string) {
+	parts := strings.Split(input, " ")
+	if len(parts) <= 1 {
+		log.Fatal(fmt.Sprintf("command [%s] not recognized", input))
+	}
+
+	comm := parts[0]
+	args := parts[1:]
+
+	return comm, args
 }
